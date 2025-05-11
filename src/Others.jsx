@@ -1,5 +1,5 @@
 import './index.css'
-import './component.css'
+// import './component.css'
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 

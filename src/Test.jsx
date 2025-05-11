@@ -1,4 +1,4 @@
-import './component.css'
+// import './component.css'
 
 function Test() {
     return(
