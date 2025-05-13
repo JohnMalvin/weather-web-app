@@ -15,7 +15,7 @@ function Forecast ({location, celcius}) {
             try {
                 // let location = "Sydney"
                 // console.log(location)
-                let URL = `http://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${location}&aqi=yes`
+                let URL = `https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${location}&aqi=yes`
                 let result = await fetch(URL);
                 let json = await result.json();
                 // console.log(json);

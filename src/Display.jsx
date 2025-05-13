@@ -12,11 +12,11 @@ import ICON_UV from './assets/ICONS/ICON-UV.svg'
 function Display({ location , celcius}) {
     const toCelcius = celcius;
 
-    const [URL, setURL] = useState(`http://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=Sydney&aqi=yes`)
+    const [URL, setURL] = useState(`https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=Sydney&aqi=yes`)
     const [URL2, setURL2] = useState("")
     useEffect(()=> {
         // console.log(location);
-        let new_url = `http://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${location}&aqi=yes`
+        let new_url = `https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${location}&aqi=yes`
         setURL(new_url)
         
         let currentDate = new Date();
