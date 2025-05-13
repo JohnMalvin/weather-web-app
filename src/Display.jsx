@@ -2,6 +2,13 @@ import './index.css'
 import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
+import REACT_ICON from './assets/react.svg'
+import ICON_INFO from './assets/ICONS/ICON-INFO.svg'
+import ICON_HUMID from './assets/ICONS/ICON-HUMID.svg'
+import ICON_WIND from './assets/ICONS/ICON-WIND.svg'
+import ICON_TEMP from './assets/ICONS/ICON-TEMP.svg'
+import ICON_UV from './assets/ICONS/ICON-UV.svg'
+
 function Display({ location , celcius}) {
     const toCelcius = celcius;
 
@@ -93,8 +100,8 @@ function Display({ location , celcius}) {
         <div className='comp-display'>
             <div className="display">
                 <div className="display-wrapped">
-                    <img className='display-image' src='src/assets/react.svg'></img>
-                    <img className='display-info icon' src='src/assets/ICONS/ICON-INFO.svg' onClick={displayInfo}></img>
+                    <img className='display-image' src={REACT_ICON}></img>
+                    <img className='display-info icon' src={ICON_INFO} onClick={displayInfo}></img>
                     <div className="display-time">{time}</div>
                     <div className="display-degree">{toCelcius? degree_c: degree_f}</div>
                     <div className="display-content">
@@ -107,13 +114,13 @@ function Display({ location , celcius}) {
                         <div className="details-divide">
                             <div className="details">
                                 <div className="icon-container">
-                                    <img className='icon' onClick={displayInfo} src="src/assets/ICONS/ICON-TEMP.svg"></img>
+                                    <img className='icon' onClick={displayInfo} src={ICON_TEMP}></img>
                                 </div>
                                 <p onClick={displayInfo}>{!info ? celcius? degree_f: degree_c :"Temperature"}</p>
                             </div>
                             <div className="details">
                                 <div className="icon-container">
-                                    <img className='icon' onClick={displayInfo} src="src/assets/ICONS/ICON-HUMID.svg"></img>
+                                    <img className='icon' onClick={displayInfo} src={ICON_HUMID}></img>
                                 </div>
                                 <p onClick={displayInfo}>{!info ? humidity : "Humidity"}</p>
                             </div>
@@ -121,13 +128,13 @@ function Display({ location , celcius}) {
                         <div className="details-divide">
                             <div className="details">
                                 <div className="icon-container">
-                                    <img className='icon' onClick={displayInfo} src="src/assets/ICONS/ICON-UV.svg"></img>
+                                    <img className='icon' onClick={displayInfo} src={ICON_UV}></img>
                                 </div>
                                 <p onClick={displayInfo}>{!info ? uv_index : "UV-index"}</p>
                             </div>
                             <div className="details">
                                 <div className="icon-container">
-                                    <img className='icon' onClick={displayInfo} src="src/assets/ICONS/ICON-WIND.svg"></img>
+                                    <img className='icon' onClick={displayInfo} src={ICON_WIND}></img>
                                 </div>
                                 <p onClick={displayInfo}>{!info ? wind : "Wind Force"}</p>
                             </div>

@@ -3,6 +3,12 @@ import './index.css'
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
+
+import REACT_ICON from './assets/react.svg'
+import ICON_HUMID from './assets/ICONS/ICON-HUMID.svg'
+import ICON_WIND from './assets/ICONS/ICON-WIND.svg'
+import ICON_UV from './assets/ICONS/ICON-UV.svg'
+
 function Others({celcius, location, setLocation, array, setArray}) {
     // const [array, setArray] = useState(["Melbourne", "London", "Kaohsiung"]);
     // let array = ["Melbourne", "London", "Kaohsiung"];
@@ -63,19 +69,19 @@ function Others({celcius, location, setLocation, array, setArray}) {
                             {/* <div className="others-location preview-on-desktop">{target_location2}</div> */}
                             <div className="others-detail-container">
                                 <div className="others-detail">
-                                    <img src='src/assets/ICONS/ICON-UV.svg' className='icon no-cursor'></img>
+                                    <img src={ICON_UV} className='icon no-cursor'></img>
                                     <p>{uv_index}</p>
                                 </div>
                                 <div className="others-detail">
-                                    <img src='src/assets/ICONS/ICON-WIND.svg' className='icon no-cursor'></img>
+                                    <img src={ICON_WIND} className='icon no-cursor'></img>
                                     <p>{wind}</p>
                                 </div>
                                 <div className="others-detail preview-on-desktop">
-                                    <img src='src/assets/ICONS/ICON-HUMID.svg' className='icon no-cursor'></img>
+                                    <img src={ICON_HUMID} className='icon no-cursor'></img>
                                     <p>{humidity}</p>
                                 </div>
                             </div>
-                            <img src='src/assets/react.svg' className='others-image'></img>
+                            <img src={REACT_ICON} className='others-image'></img>
                         </div>
                         
                     </div>

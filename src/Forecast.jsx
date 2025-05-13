@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import './index.css'
 import PropTypes from 'prop-types';
 
+
+import REACT_ICON from './assets/react.svg'
+
 function Forecast ({location, celcius}) {
     let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] 
     const [weatherData, setWeatherData] = useState(null)
@@ -80,7 +83,7 @@ function Forecast ({location, celcius}) {
 
                     return(
                         <div className={index < 3 ?  "foreday-card": "foreday-card dontPreview"} key={days}>
-                            <img src='src/assets/react.svg' className="foreday-image"></img>
+                            <img src={REACT_ICON} className="foreday-image"></img>
                             <div className="foreday-date">{days}</div>
                             <div className="foreday-temp">{celcius? minmax_temp_c : minmax_temp_f}</div>
                             <div className="foreday-desc">{conditions}</div>
@@ -131,7 +134,7 @@ function Forecast ({location, celcius}) {
                             <div className="forecast-card-devide" key={content}>
                                 <div className="forecast-card" >
                                     <div className="forecast-degree">{celcius? temp_celcius: temp_faren}</div>
-                                    <img src='src/assets/react.svg' className='forecast-image'></img>
+                                    <img src={REACT_ICON} className='forecast-image'></img>
                                     <div className="forecast-data">
                                         <div className="forecast-desc">{condition}</div>
                                         <div className="forecast-time">{hour + ":00"}</div>

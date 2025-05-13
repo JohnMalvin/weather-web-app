@@ -2,7 +2,9 @@ import { useState, useRef} from 'react';
 import './index.css'
 import PropTypes from 'prop-types';
 
-
+import ICON_CLOSE from './assets/ICONS/ICON-CLOSE.svg'
+import ICON_INFO from './assets/ICONS/ICON-INFO.svg'
+import REACT_ICON from './assets/react.svg'
 
 function Header({ setLocation, setCelcius, setArray, array}) {
     let key = "locations";
@@ -148,7 +150,7 @@ function Header({ setLocation, setCelcius, setArray, array}) {
             <div className="backdrop" id="backdrop_messages">
                 <div className="message_container backdrop_container">
                     <div className="message_top">
-                        <img onClick={conseal_messages} src='src/assets/ICONS/ICON-CLOSE.svg' className='icon icon_close'></img>
+                        <img onClick={conseal_messages} src={ICON_CLOSE} className='icon icon_close'></img>
                     </div>
                     <p id='disclaimer'>DISCLAIMER!!!</p>
                     <p>This project is intended solely as a coding project.</p><br></br>
@@ -160,9 +162,9 @@ function Header({ setLocation, setCelcius, setArray, array}) {
             </div>
             <div className="backdrop" id="backdrop_settings">
                 <div className="setting_container backdrop_container">
-                    <img onClick={conseal_settings} src='src/assets/ICONS/ICON-CLOSE.svg' className='icon icon_close_setting'></img>
+                    <img onClick={conseal_settings} src={ICON_CLOSE} className='icon icon_close_setting'></img>
                     <div className="volume_container">
-                        <img src='src/assets/react.svg' className='icon'></img>
+                        <img src={REACT_ICON} className='icon'></img>
                         <input className="volume_indicator" type="range"></input>
                     </div>
                     
@@ -177,7 +179,7 @@ function Header({ setLocation, setCelcius, setArray, array}) {
             </div>
             <div className="header">
                 <div className="location">
-                    <img src='src/assets/react.svg' className='icon icon_location'></img>
+                    <img src={REACT_ICON} className='icon icon_location'></img>
                     <p id="current_location" className='current'>Sydney</p>
                 </div>
                 
@@ -186,7 +188,7 @@ function Header({ setLocation, setCelcius, setArray, array}) {
                     }}
                         type='text' placeholder='Type suburb...' autoComplete='off' onKeyDown={handleKey}></input>
                     <div className="search_circle" >
-                        <img onClick={() => validator(search_input)} src='src/assets/react.svg' className='icon icon_search'></img>
+                        <img onClick={() => validator(search_input)} src={REACT_ICON} className='icon icon_search'></img>
                     </div>
                     <div className="result_box">
                     <ul id="search_list" ref={list}>
@@ -206,8 +208,8 @@ function Header({ setLocation, setCelcius, setArray, array}) {
                     </div>
                 </div>
                 <div className="setting">
-                    <img onClick={show_settings} src='src/assets/react.svg' className='icon icon_setting'></img>
-                    <img onClick={show_messages} src='src/assets/ICONS/ICON-INFO.svg' className='icon icon_info'></img>
+                    <img onClick={show_settings} src={REACT_ICON} className='icon icon_setting'></img>
+                    <img onClick={show_messages} src={ICON_INFO} className='icon icon_info'></img>
                 </div>
 
             </div>
