@@ -21,7 +21,7 @@ function Others({celcius, location, setLocation, array, setArray}) {
                 let datas = [];
                 for (let i = 0; i < 3; i++) {
 
-                    let URL =`http://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${array[i]}&aqi=yes`;
+                    let URL =`https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${array[i]}&aqi=yes`;
                     let result = await fetch(URL);
                     let json = await result.json();
                     datas.push(json);
