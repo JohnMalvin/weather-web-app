@@ -26,7 +26,7 @@ function Header({ setLocation, setCelcius, setArray, array}) {
 
         loc = search_input.current.value 
         // console.log(loc)
-        let new_link = `http://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${loc}&aqi=yes`;
+        let new_link = `https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${loc}&aqi=yes`;
         try {
             const response = await fetch(new_link);
             if(!response.ok) {
