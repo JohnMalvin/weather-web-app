@@ -51,7 +51,9 @@ function Display2({ locationData , celciusData}) {
     const [uv_index, setUv_index] = useState(0 + " UV");
     const [wind, setWind] = useState(0  + " km/h");
     const [image, setImage] = useState("https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg");
-
+    useEffect(() => {
+        setLocation(locationData);
+    }, [locationData]);
     useEffect(() => {
         const fetchWeather = async () => {
             try {
@@ -66,18 +68,14 @@ function Display2({ locationData , celciusData}) {
                 setWind(weather.windspeed + " km/h");
                 setFormattedLocation(`${weather.location.city}, ${weather.location.country}`);
                 setImage(weather.image);
-                if (weather.location.city !== location) {
-                    setLocation(weather.location.city);
-                }
-              } catch (err) {
+
+            } catch (err) {
                 console.error(err);
-              }
+            }
         };
     
-        fetchWeather();
-    }, [location, celciusData, celcius]);
-
-
+        if (location) fetchWeather();
+    }, [celciusData, celcius, locationData, location]);
 
     return(
         <div className='comp-display'>

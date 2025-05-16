@@ -155,27 +155,62 @@ export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenhe
           }
         : null;
   
-    return {
-        location: {
-            city: name,
-            country,
-            latitude,
-            longitude,
-            timezone,
-        },
-        datetime: `${hourStr}:00`,
-        temperature,
-        humidity,
-        uvIndex,
-        windspeed,
-        condition,
-        description,
-        airQuality,
-        image
-      };
+        return {
+            location: {
+                city: name,
+                country,
+                latitude,
+                longitude,
+                timezone,
+            },
+            datetime: `${hourStr}:00`,
+            temperature,
+            humidity,
+            uvIndex,
+            windspeed,
+            condition,
+            description,
+            airQuality,
+            image
+        };
     } catch (error) {
-      console.error(error);
-      throw new Error(error.message || "Unknown error");
+        console.error(error);
+        throw new Error(error.message || "Unknown error");
     }
-  };
-  
+};
+
+export const getOthersWeatherData = async (cityArray) => {
+    let result = [];
+    try {
+        for (const city of cityArray) {
+            const data = await getWeatherData(city, 0, 0);
+            result.push({
+                temperature: data.temperature,
+                uvIndex: data.uvIndex,
+                windspeed: data.windspeed,
+                humidity: data.humidity,
+                city: data.location.city,
+                country: data.location.country,
+                image: data.image,
+            });
+        }
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw new Error(error.message || "Unknown error");
+    }
+}
+
+const current = "Sydney";
+let cities = ["Melbourne", "Singapore", "Medan"];
+
+export const updateCities = (current, cities, selected) => { 
+    let newArray = [];
+    newArray.push(current);
+    const filteredArray = cities.filter((element) => element !== selected);
+    newArray = [...newArray, ...filteredArray];
+    if (filteredArray.length === cities.length) {
+        newArray.pop();
+    }
+    return newArray;
+}
