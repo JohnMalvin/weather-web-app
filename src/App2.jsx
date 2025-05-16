@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { getOthersWeatherData } from "./CLIENT_HELPER.JS";
 import Display2 from "./Display2";
 import Others from "./Others2";
-import { use } from "react";
 
 
 export default function WeatherDisplay() {

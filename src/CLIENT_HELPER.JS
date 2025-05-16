@@ -88,73 +88,107 @@ const weatherCodeImages = {
     96: "https://openweathermap.org/img/wn/11d.png",
     99: "https://openweathermap.org/img/wn/11d.png",
 };
+
+function getDateLabel(targetDate) {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+  
+    // Normalize time for comparison (year, month, date only)
+    const target = targetDate.setHours(0, 0, 0, 0);
+    const todayNorm = today.setHours(0, 0, 0, 0);
+    const tomorrowNorm = tomorrow.setHours(0, 0, 0, 0);
+  
+    if (target === todayNorm) return "Today";
+    if (target === tomorrowNorm) return "Tomorrow";
+  
+    // Otherwise, return weekday name
+    return targetDate.toLocaleDateString('en-US', { weekday: 'long' }); // e.g. "Monday"
+}
   
 export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenheit = false) => {
     try {
-    const geoRes = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1`
-    );
-    if (!geoRes.ok) throw new Error("Geocoding failed");
-    const geoData = await geoRes.json();
+        const geoRes = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1`
+        );
+        if (!geoRes.ok) throw new Error("Geocoding failed");
+        const geoData = await geoRes.json();
 
-    if (!geoData.results || geoData.results.length === 0) {
-        throw new Error("City not found");
-    }
+        if (!geoData.results || geoData.results.length === 0) {
+            throw new Error("City not found");
+        }
 
-    const { latitude, longitude, timezone, name, country } = geoData.results[0];
+        const { latitude, longitude, timezone, name, country } = geoData.results[0];
 
-    const now = new Date();
-    const target = new Date(now);
-    target.setDate(now.getDate() + dayOffset);
-    const currentHour = now.getHours();
-    target.setHours(currentHour + hourOffset, 0, 0, 0);
+        const now = new Date();
+        const target = new Date(now);
+        target.setDate(now.getDate() + dayOffset);
+        const currentHour = now.getHours();
+        target.setHours(currentHour + hourOffset, 0, 0, 0);
 
-    const day = target.toISOString().split("T")[0];
-    const hourStr = target.getHours().toString().padStart(2, "0");
-    const targetDateTime = `${day}T${hourStr}:00`;
+        const day = target.toISOString().split("T")[0];
+        const hourStr = target.getHours().toString().padStart(2, "0");
+        const targetDateTime = `${day}T${hourStr}:00`;
 
-    // Fetch regular weather
-    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
-        `&hourly=temperature_2m,weathercode,relativehumidity_2m,uv_index,windspeed_10m&forecast_days=7&timezone=${timezone}`;
+        // Fetch hourly weather
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
+            `&hourly=temperature_2m,weathercode,relativehumidity_2m,uv_index,windspeed_10m&forecast_days=7&timezone=${timezone}`;
 
-    const weatherRes = await fetch(weatherUrl);
-    if (!weatherRes.ok) throw new Error("Weather fetch failed");
-    const weatherJson = await weatherRes.json();
+        const weatherRes = await fetch(weatherUrl);
+        if (!weatherRes.ok) throw new Error("Weather fetch failed");
+        const weatherJson = await weatherRes.json();
 
-    const timeIndex = weatherJson.hourly.time.indexOf(targetDateTime);
-    if (timeIndex === -1) {
-        throw new Error("Requested day/hour not available in data");
-    }
+        const timeIndex = weatherJson.hourly.time.indexOf(targetDateTime);
+        if (timeIndex === -1) {
+            throw new Error("Requested day/hour not available in data");
+        }
 
-    let temperature = weatherJson.hourly.temperature_2m[timeIndex];
-    const weatherCode = weatherJson.hourly.weathercode[timeIndex];
-    const humidity = weatherJson.hourly.relativehumidity_2m[timeIndex];
-    const uvIndex = weatherJson.hourly.uv_index[timeIndex];
-    const windspeed = weatherJson.hourly.windspeed_10m[timeIndex];
-    const condition = weatherCodeConditions[weatherCode] || "Unknown";
-    const description = weatherCodeDescriptions[weatherCode] || "Unknown";
-    const image = weatherCodeImages[weatherCode] || "Unknown";
+        let temperature = weatherJson.hourly.temperature_2m[timeIndex];
+        const weatherCode = weatherJson.hourly.weathercode[timeIndex];
+        const humidity = weatherJson.hourly.relativehumidity_2m[timeIndex];
+        const uvIndex = weatherJson.hourly.uv_index[timeIndex];
+        const windspeed = weatherJson.hourly.windspeed_10m[timeIndex];
+        const condition = weatherCodeConditions[weatherCode] || "Unknown";
+        const description = weatherCodeDescriptions[weatherCode] || "Unknown";
+        const image = weatherCodeImages[weatherCode] || "Unknown";
 
-    if (isFahrenheit) {
-        temperature = (temperature * 9) / 5 + 32;
-    }
+        if (isFahrenheit) {
+            temperature = (temperature * 9) / 5 + 32;
+        }
 
-    const airRes = await fetch(
-        `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}` +
-        `&hourly=pm10,pm2_5,european_aqi&timezone=${timezone}`
-    );
-    if (!airRes.ok) throw new Error("Air quality fetch failed");
-    const airJson = await airRes.json();
+        // Fetch daily max/min temps for the target day
+        const dailyWeatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
+            `&daily=temperature_2m_max,temperature_2m_min&timezone=${timezone}&start_date=${day}&end_date=${day}`;
 
-    const airIndex = airJson.hourly.time.indexOf(targetDateTime);
-    const airQuality = airIndex !== -1
-        ? {
-            pm10: airJson.hourly.pm10[airIndex],
-            pm2_5: airJson.hourly.pm2_5[airIndex],
-            european_aqi: airJson.hourly.european_aqi[airIndex]
-          }
-        : null;
-  
+        const dailyRes = await fetch(dailyWeatherUrl);
+        if (!dailyRes.ok) throw new Error("Daily weather fetch failed");
+        const dailyJson = await dailyRes.json();
+
+        let temperatureMax = dailyJson.daily.temperature_2m_max[0];
+        let temperatureMin = dailyJson.daily.temperature_2m_min[0];
+
+        if (isFahrenheit) {
+            temperatureMax = (temperatureMax * 9) / 5 + 32;
+            temperatureMin = (temperatureMin * 9) / 5 + 32;
+        }
+
+        // Fetch air quality
+        const airRes = await fetch(
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}` +
+            `&hourly=pm10,pm2_5,european_aqi&timezone=${timezone}`
+        );
+        if (!airRes.ok) throw new Error("Air quality fetch failed");
+        const airJson = await airRes.json();
+
+        const airIndex = airJson.hourly.time.indexOf(targetDateTime);
+        const airQuality = airIndex !== -1
+            ? {
+                pm10: airJson.hourly.pm10[airIndex],
+                pm2_5: airJson.hourly.pm2_5[airIndex],
+                european_aqi: airJson.hourly.european_aqi[airIndex]
+            }
+            : null;
+
         return {
             location: {
                 city: name,
@@ -165,6 +199,8 @@ export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenhe
             },
             datetime: `${hourStr}:00`,
             temperature,
+            temperatureMax,
+            temperatureMin,
             humidity,
             uvIndex,
             windspeed,
@@ -179,30 +215,27 @@ export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenhe
     }
 };
 
-export const getOthersWeatherData = async (cityArray) => {
-    let result = [];
-    try {
-        for (const city of cityArray) {
-            const data = await getWeatherData(city, 0, 0);
-            result.push({
-                temperature: data.temperature,
-                uvIndex: data.uvIndex,
-                windspeed: data.windspeed,
-                humidity: data.humidity,
-                city: data.location.city,
-                country: data.location.country,
-                image: data.image,
-            });
-        }
-        return result;
-    } catch (error) {
-        console.error(error);
-        throw new Error(error.message || "Unknown error");
-    }
-}
 
-const current = "Sydney";
-let cities = ["Melbourne", "Singapore", "Medan"];
+export const getOthersWeatherData = async (cityArray) => {
+    try {
+      const promises = cityArray.map((city) => getWeatherData(city, 0, 0));
+      const allData = await Promise.all(promises);
+  
+      return allData.map((data) => ({
+        temperature: data.temperature,
+        uvIndex: data.uvIndex,
+        windspeed: data.windspeed,
+        humidity: data.humidity,
+        city: data.location.city,
+        country: data.location.country,
+        image: data.image,
+      }));
+    } catch (error) {
+      console.error("Error fetching other cities' weather data:", error);
+      throw new Error(error.message || "Unknown error");
+    }
+  };
+
 
 export const updateCities = (current, cities, selected) => { 
     let newArray = [];
@@ -214,3 +247,43 @@ export const updateCities = (current, cities, selected) => {
     }
     return newArray;
 }
+
+export const getFullDayWeatherData = async (cityName) => {
+    try {
+      const promises = Array.from({ length: 24 }, (_, hour) =>
+        getWeatherData(cityName, 0, hour)
+      );
+  
+      const allData = await Promise.all(promises);
+  
+      return allData.map((data) => ({
+        time: data.datetime,
+        temperature: data.temperature,
+        condition: data.condition,
+        image: data.image,
+      }));
+    } catch (error) {
+      console.error("Error fetching full day weather data:", error);
+      throw new Error(error.message || "Unknown error");
+    }
+  };
+
+export const getFullWeekWeatherData = async (cityName) => {
+    try {
+      const promises = [];
+      for (let i = 0; i < 7; i++) {
+        promises.push(getWeatherData(cityName, i, 0));
+      }
+      const dataResults = await Promise.all(promises);
+      
+      return dataResults.map((data, i) => ({
+        date: getDateLabel(new Date(Date.now() + i * 86400000)),
+        temperatureMin: Math.ceil(data.temperatureMin),
+        temperatureMax: Math.ceil(data.temperatureMax),
+        condition: data.condition,
+      }));
+    } catch (error) {
+      console.error("Error fetching full week weather data:", error);
+      throw new Error(error.message || "Unknown error");
+    }
+  };
