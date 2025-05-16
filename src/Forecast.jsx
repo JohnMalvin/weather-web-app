@@ -29,7 +29,7 @@ function Forecast ({location, celcius}) {
                 nextWeekDate.setDate(currentDate.getDate() + 7);
                 let date2 = nextWeekDate.toISOString().split('T')[0];
                 
-                let URL2 = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date1}/${date2}?key=D4HK23E92MQYVH3V9GAW5EAYE`
+                let URL2 = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date1}/${date2}?key=AG4CQFT7CK4A6DBLTPQQ7PMB7`
                 let result2 = await fetch(URL2);
                 let json2 = await result2.json();
                 // console.log("here it is")
