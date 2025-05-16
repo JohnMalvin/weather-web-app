@@ -57,7 +57,37 @@ export const weatherCodeDescriptions = {
     95: "A thunderstorm with lightning and thunder activity.",
     96: "Thunderstorm accompanied by slight hail.",
     99: "Severe thunderstorm with heavy hail causing damage.",
-  };
+};
+const weatherCodeImages = {
+    0: "https://openweathermap.org/img/wn/01d.png",
+    1: "https://openweathermap.org/img/wn/02d.png",
+    2: "https://openweathermap.org/img/wn/03d.png",
+    3: "https://openweathermap.org/img/wn/04d.png",
+    45: "https://openweathermap.org/img/wn/50d.png",
+    48: "https://openweathermap.org/img/wn/50d.png",
+    51: "https://openweathermap.org/img/wn/09d.png",
+    53: "https://openweathermap.org/img/wn/09d.png",
+    55: "https://openweathermap.org/img/wn/09d.png",
+    56: "https://openweathermap.org/img/wn/13d.png",
+    57: "https://openweathermap.org/img/wn/13d.png",
+    61: "https://openweathermap.org/img/wn/10d.png",
+    63: "https://openweathermap.org/img/wn/10d.png",
+    65: "https://openweathermap.org/img/wn/10d.png",
+    66: "https://openweathermap.org/img/wn/13d.png",
+    67: "https://openweathermap.org/img/wn/13d.png",
+    71: "https://openweathermap.org/img/wn/13d.png",
+    73: "https://openweathermap.org/img/wn/13d.png",
+    75: "https://openweathermap.org/img/wn/13d.png",
+    77: "https://openweathermap.org/img/wn/13d.png",
+    80: "https://openweathermap.org/img/wn/09d.png",
+    81: "https://openweathermap.org/img/wn/09d.png",
+    82: "https://openweathermap.org/img/wn/11d.png",
+    85: "https://openweathermap.org/img/wn/13d.png",
+    86: "https://openweathermap.org/img/wn/13d.png",
+    95: "https://openweathermap.org/img/wn/11d.png",
+    96: "https://openweathermap.org/img/wn/11d.png",
+    99: "https://openweathermap.org/img/wn/11d.png",
+};
   
 export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenheit = false) => {
     try {
@@ -103,6 +133,7 @@ export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenhe
     const windspeed = weatherJson.hourly.windspeed_10m[timeIndex];
     const condition = weatherCodeConditions[weatherCode] || "Unknown";
     const description = weatherCodeDescriptions[weatherCode] || "Unknown";
+    const image = weatherCodeImages[weatherCode] || "Unknown";
 
     if (isFahrenheit) {
         temperature = (temperature * 9) / 5 + 32;
@@ -140,6 +171,7 @@ export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenhe
         condition,
         description,
         airQuality,
+        image
       };
     } catch (error) {
       console.error(error);
