@@ -3,6 +3,7 @@ import './index.css'
 import { useEffect, useState } from 'react';
 import OthersTemplate from './TEMPLATE/OthersTemplate';
 import PropTypes from 'prop-types';
+import SPINNER from "./assets/SPINNER.svg";
 
 
 // import REACT_ICON from './assets/react.svg'
@@ -12,7 +13,7 @@ import ICON_UV from './assets/ICONS/ICON-UV.svg'
 import { getOthersWeatherData } from './CLIENT_HELPER.JS';
 import { updateCities } from './CLIENT_HELPER.JS';
 
-function Others({ cities, celcius , locationData, setLocationData, setCities}) {
+function Others({ cities, celcius , locationData, setLocationData, setCities, loading}) {
     const [data, setData] = useState([]);
     const [othersLoading, setOthersLoading] = useState(true);
     useEffect(() => {
@@ -31,6 +32,12 @@ function Others({ cities, celcius , locationData, setLocationData, setCities}) {
         fetchWeather();
         return () => { ignore = true; };
     }, [locationData, cities]);
+
+    useEffect(() => {
+        if (loading) {
+            setOthersLoading(true);
+        };
+    }, [loading]);
     
     return(
         <div className='comp-others'>
@@ -74,7 +81,7 @@ function Others({ cities, celcius , locationData, setLocationData, setCities}) {
                                     <p>{humidity}</p>
                                 </div>
                             </div>
-                            <img src={image} className='others-image'></img>
+                            <img src={othersLoading ? SPINNER : image} className='others-image'></img>
                         </div>
                         
                     </div>
@@ -92,5 +99,6 @@ Others.propTypes = {
     cities: PropTypes.array.isRequired,
     setCities: PropTypes.func.isRequired,
     setLocationData: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
 export default Others;

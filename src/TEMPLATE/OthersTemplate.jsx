@@ -1,4 +1,4 @@
-import REACT_ICON from './../assets/react.svg';
+import SPINNER from './../assets/SPINNER.svg';
 
 function OthersTemplate() {
   return (
@@ -8,19 +8,19 @@ function OthersTemplate() {
           <div className="others-location hide-on-desktop">{"loading..."}</div>
           <div className="others-detail-container">
               <div className="others-detail">
-                  <img src={REACT_ICON} className='icon no-cursor'></img>
+                  <img src={SPINNER} className='icon no-cursor'></img>
                   <p>{"loading..."}</p>
               </div>
               <div className="others-detail">
-                  <img src={REACT_ICON} className='icon no-cursor'></img>
+                  <img src={SPINNER} className='icon no-cursor'></img>
                   <p>{"loading..."}</p>
               </div>
               <div className="others-detail preview-on-desktop">
-                  <img src={REACT_ICON} className='icon no-cursor'></img>
+                  <img src={SPINNER} className='icon no-cursor'></img>
                   <p>{"loading..."}</p>
               </div>
           </div>
-          <img src={REACT_ICON} className='others-image'></img>
+          <img src={SPINNER} className='others-image'></img>
       </div>
       
   </div>

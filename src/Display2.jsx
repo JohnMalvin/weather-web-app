@@ -7,11 +7,12 @@ import ICON_HUMID from './assets/ICONS/ICON-HUMID.svg'
 import ICON_WIND from './assets/ICONS/ICON-WIND.svg'
 import ICON_TEMP from './assets/ICONS/ICON-TEMP.svg'
 import ICON_UV from './assets/ICONS/ICON-UV.svg'
+import SPINNER from "./assets/SPINNER.svg";
 import { getWeatherData } from './CLIENT_HELPER.JS';
 import PropTypes from 'prop-types';
 
 
-function Display2({ locationData , celciusData}) {
+function Display({ locationData , celciusData, loading}) {
     const [time, setTime] = useState("00:00");
     
     function updateTime(){
@@ -51,9 +52,18 @@ function Display2({ locationData , celciusData}) {
     const [uv_index, setUv_index] = useState(0 + " UV");
     const [wind, setWind] = useState(0  + " km/h");
     const [image, setImage] = useState("https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg");
+    const [displayLoading, setDisplayLoading] = useState(true);
+    
+    useEffect(() => {
+        if (loading) {
+            setDisplayLoading(true);
+        }
+    }, [loading])
+
     useEffect(() => {
         setLocation(locationData);
     }, [locationData]);
+    
     useEffect(() => {
         let ignore = false;
         const fetchWeather = async () => {
@@ -70,6 +80,7 @@ function Display2({ locationData , celciusData}) {
                 setWind(weather.windspeed + " km/h");
                 setFormattedLocation(`${weather.location.city}, ${weather.location.country}`);
                 setImage(weather.image);
+                setDisplayLoading(false);
 
             } catch (err) {
                 console.error(err);
@@ -84,7 +95,7 @@ function Display2({ locationData , celciusData}) {
         <div className='comp-display'>
             <div className="display">
                 <div className="display-wrapped">
-                    <img className='display-image' src={image}></img>
+                    <img className='display-image' src={displayLoading ? SPINNER: image}></img>
                     <img className='display-info icon' src={ICON_INFO} onClick={displayInfo}></img>
                     <div className="display-time">{time}</div>
                     <div className="display-degree">{celcius? c_degree: f_degree}</div>
@@ -132,8 +143,9 @@ function Display2({ locationData , celciusData}) {
     )
 }
 
-Display2.propTypes = {
+Display.propTypes = {
     locationData: PropTypes.string.isRequired,
     celciusData: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
-export default Display2;
+export default Display;

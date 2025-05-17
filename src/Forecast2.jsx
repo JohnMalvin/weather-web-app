@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './index.css'
 import PropTypes from 'prop-types';
+import SPINNER from "./assets/SPINNER.svg";
 
 
 // import REACT_ICON from './assets/react.svg'
@@ -9,11 +10,17 @@ import { getFullDayWeatherData } from './CLIENT_HELPER.JS';
 import ForeDayTemplate from './TEMPLATE/ForeDayTemplate';
 import ForeCastTemplate from './TEMPLATE/ForeCastTemplate';
 
-function Forecast({ locationData, celciusData }) {
+function Forecast({ locationData, celciusData, loading, setLoading }) {
     const [dayData, setDayData] = useState([]);
     const [weekData, setWeekData] = useState([]);
     const [foreDayLoading, setForeDayLoading] = useState(true);
     const [foreCastLoading, setForeCastLoading] = useState(true);
+    useEffect(() => {
+        if (loading) {
+            setForeDayLoading(true);
+            setForeCastLoading(true);
+        };
+    }, [loading]);
     useEffect(() => { 
         let ignore = false;
         const fetchWeather = async () => {
@@ -40,6 +47,7 @@ function Forecast({ locationData, celciusData }) {
                 console.log("Full Day Weather Data:", data);
                 setDayData(data);
                 setForeCastLoading(false);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching weather data:", error);
             }
@@ -76,7 +84,7 @@ function Forecast({ locationData, celciusData }) {
 
                         return(
                             <div className={"foreday-card"} key={days + index}>
-                                <img src={image} className="foreday-image"></img>
+                                <img src={foreDayLoading ? SPINNER: image} className="foreday-image"></img>
                                 <div className="foreday-date">{date ? date : "loading"}</div>
                                 <div className="foreday-temp">{celciusData ? minmax_temp_c : minmax_temp_f}</div>
                                 <div className="foreday-desc">{condition}</div>
@@ -111,7 +119,7 @@ function Forecast({ locationData, celciusData }) {
                             <div className="forecast-card-devide" key={hours + index}>
                                 <div className="forecast-card" >
                                     <div className="forecast-degree">{celciusData? temp_celcius: temp_faren}</div>
-                                    <img src={image} className='forecast-image'></img>
+                                    <img src={foreCastLoading ? SPINNER : image} className='forecast-image'></img>
                                     <div className="forecast-data">
                                         <div className="forecast-desc">{condition}</div>
                                         <div className="forecast-time">{time}</div>
@@ -134,5 +142,7 @@ function Forecast({ locationData, celciusData }) {
 Forecast.propTypes = {
     locationData: PropTypes.string.isRequired,
     celciusData: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    setLoading: PropTypes.func.isRequired,
 };
 export default Forecast;
