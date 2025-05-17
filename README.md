@@ -6,7 +6,7 @@ A sleek and minimalist weather application focused on frontend development. Buil
 
 ## 🖌️ Design
 
-View the full Figma file 👉 [Here](https://www.figma.com/design/rgIdALutzQTdWGQoRvY6h9/WEATHER?m=auto&t=Vu77OT2X0eKkm6iR-6)
+View the full Figma file 👉 [Here](https://www.figma.com/design/rgIdALutzQTdWGQoRvY6h9/WEATHER?node-id=0-1&t=4NoD52plNayWB60l-1)
 
 ## 🧠 Overview
 
