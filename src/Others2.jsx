@@ -14,8 +14,10 @@ import { updateCities } from './CLIENT_HELPER.JS';
 function Others({ cities, celcius , locationData, setLocationData, setCities}) {
     const [data, setData] = useState([]);
     useEffect(() => {
+        let ignore = false;
         const fetchWeather = async () => {
             try {
+                if (ignore) return;
                 const weather = await getOthersWeatherData(cities);
                 console.log(weather);
                 setData(weather);
@@ -24,6 +26,7 @@ function Others({ cities, celcius , locationData, setLocationData, setCities}) {
             }
         };
         fetchWeather();
+        return () => { ignore = true; };
     }, [locationData, cities]);
     
     return(

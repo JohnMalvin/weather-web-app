@@ -104,7 +104,7 @@ function getDateLabel(targetDate) {
   
     // Otherwise, return weekday name
     return targetDate.toLocaleDateString('en-US', { weekday: 'long' }); // e.g. "Monday"
-}
+  }
   
 export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenheit = false) => {
     try {
@@ -125,10 +125,12 @@ export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenhe
         target.setDate(now.getDate() + dayOffset);
         const currentHour = now.getHours();
         target.setHours(currentHour + hourOffset, 0, 0, 0);
-
+        
+        // ⬇️ NOW we get the updated day and hour
         const day = target.toISOString().split("T")[0];
         const hourStr = target.getHours().toString().padStart(2, "0");
         const targetDateTime = `${day}T${hourStr}:00`;
+        
 
         // Fetch hourly weather
         const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
@@ -281,6 +283,7 @@ export const getFullWeekWeatherData = async (cityName) => {
         temperatureMin: Math.ceil(data.temperatureMin),
         temperatureMax: Math.ceil(data.temperatureMax),
         condition: data.condition,
+        image: data.image,
       }));
     } catch (error) {
       console.error("Error fetching full week weather data:", error);

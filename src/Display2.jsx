@@ -55,8 +55,10 @@ function Display2({ locationData , celciusData}) {
         setLocation(locationData);
     }, [locationData]);
     useEffect(() => {
+        let ignore = false;
         const fetchWeather = async () => {
             try {
+                if (ignore) return;
                 const weather = await getWeatherData(location, 0, 0, celcius);
                 console.log(weather);
                 setC_degree(Math.ceil(weather.temperature) + "°C");
@@ -75,7 +77,8 @@ function Display2({ locationData , celciusData}) {
         };
     
         if (location) fetchWeather();
-    }, [celciusData, celcius, locationData, location]);
+        return () => { ignore = true; };
+    }, [celcius, location]);
 
     return(
         <div className='comp-display'>

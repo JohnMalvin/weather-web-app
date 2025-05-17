@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Display2 from "./Display2";
 import Others from "./Others2";
+import Forecast from "./Forecast2";
 
 
 export default function WeatherDisplay() {
@@ -23,6 +24,10 @@ export default function WeatherDisplay() {
         setCities={setCities}
         cities={cities}
         celcius={false}
+      />
+      <Forecast
+        locationData={locationData}
+        celciusData={false}
       />
     </>
   );
