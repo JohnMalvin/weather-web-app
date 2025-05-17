@@ -1,6 +1,7 @@
 import './index.css'
 // import './component.css'
 import { useEffect, useState } from 'react';
+import OthersTemplate from './TEMPLATE/OthersTemplate';
 import PropTypes from 'prop-types';
 
 
@@ -13,6 +14,7 @@ import { updateCities } from './CLIENT_HELPER.JS';
 
 function Others({ cities, celcius , locationData, setLocationData, setCities}) {
     const [data, setData] = useState([]);
+    const [othersLoading, setOthersLoading] = useState(true);
     useEffect(() => {
         let ignore = false;
         const fetchWeather = async () => {
@@ -21,6 +23,7 @@ function Others({ cities, celcius , locationData, setLocationData, setCities}) {
                 const weather = await getOthersWeatherData(cities);
                 console.log(weather);
                 setData(weather);
+                setOthersLoading(false);
             } catch (error) {
                 console.error("Error fetching weather data:", error);
             }
@@ -32,7 +35,14 @@ function Others({ cities, celcius , locationData, setLocationData, setCities}) {
     return(
         <div className='comp-others'>
             <div className="others-container others">
-                { data.map((city, index) => {
+                {othersLoading ? (
+                    <>
+                        <OthersTemplate />
+                        <OthersTemplate />
+                        <OthersTemplate />
+                    </>
+                ) : (
+                    data.map((city, index) => {
                     const degree_c = Math.round(city.temperature) + "°C";
                     const degree_f = Math.round((city.temperature * 9) / 5 + 32) + "°F";
                     const uv_index = city.uvIndex + " UV";
@@ -69,7 +79,7 @@ function Others({ cities, celcius , locationData, setLocationData, setCities}) {
                         
                     </div>
                     )})
-                }
+                )}
 
             </div>
         </div>

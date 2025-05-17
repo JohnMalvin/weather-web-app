@@ -3,31 +3,17 @@ import './index.css'
 import PropTypes from 'prop-types';
 
 
-import REACT_ICON from './assets/react.svg'
+// import REACT_ICON from './assets/react.svg'
 import { getFullWeekWeatherData } from './CLIENT_HELPER.JS';
 import { getFullDayWeatherData } from './CLIENT_HELPER.JS';
+import ForeDayTemplate from './TEMPLATE/ForeDayTemplate';
+import ForeCastTemplate from './TEMPLATE/ForeCastTemplate';
 
 function Forecast({ locationData, celciusData }) {
     const [dayData, setDayData] = useState([]);
     const [weekData, setWeekData] = useState([]);
     const [foreDayLoading, setForeDayLoading] = useState(true);
-
-    useEffect(() => { 
-        let ignore = false;
-        const fetchWeather = async () => {
-            if (ignore) return;
-            try {
-                const data = await getFullDayWeatherData(locationData);
-                console.log("Full Day Weather Data:", data);
-                setDayData(data);
-            } catch (error) {
-                console.error("Error fetching weather data:", error);
-            }
-        };
-        fetchWeather();
-        return () => { ignore = true; };
-    }, [locationData, celciusData]);
-    
+    const [foreCastLoading, setForeCastLoading] = useState(true);
     useEffect(() => { 
         let ignore = false;
         const fetchWeather = async () => {
@@ -44,32 +30,37 @@ function Forecast({ locationData, celciusData }) {
         fetchWeather();
         return () => { ignore = true; };
     }, [locationData, celciusData]);
+
+    useEffect(() => { 
+        let ignore = false;
+        const fetchWeather = async () => {
+            if (ignore) return;
+            try {
+                const data = await getFullDayWeatherData(locationData);
+                console.log("Full Day Weather Data:", data);
+                setDayData(data);
+                setForeCastLoading(false);
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+            }
+        };
+        fetchWeather();
+        return () => { ignore = true; };
+    }, [locationData, celciusData]);
+    
  
     return(
         <div className='comp-forecast'>
             <div className="foreday-container">
                 {foreDayLoading ? (
                     <>
-                        <div className={"foreday-card"}>
-                            <img src={REACT_ICON} className="foreday-image"></img>
-                            <div className="foreday-date">{"loading.."}</div>
-                            <div className="foreday-temp">{"loading..."}</div>
-                            <div className="foreday-desc">{"loading..."}</div>
-                        </div>
-                        <div className={"foreday-card"}>
-                            <img src={REACT_ICON} className="foreday-image"></img>
-                            <div className="foreday-date">{"loading.."}</div>
-                            <div className="foreday-temp">{"loading..."}</div>
-                            <div className="foreday-desc">{"loading..."}</div>
-                        </div>
-                        <div className={"foreday-card"}>
-                            <img src={REACT_ICON} className="foreday-image"></img>
-                            <div className="foreday-date">{"loading.."}</div>
-                            <div className="foreday-temp">{"loading..."}</div>
-                            <div className="foreday-desc">{"loading..."}</div>
-                        </div>
+                        <ForeDayTemplate />
+                        <ForeDayTemplate />
+                        <ForeDayTemplate />
+                        <ForeDayTemplate />
+                        <ForeDayTemplate />
                     </>
-                ): (
+                ) : (
                     weekData.map((days, index) => {
                         const condition = days.condition;
                         const date = days.date;
@@ -84,7 +75,7 @@ function Forecast({ locationData, celciusData }) {
                         const minmax_temp_f = min_temp_f + "°/" + max_temp_f + "°F";
 
                         return(
-                            <div className={index < 3 ?  "foreday-card": "foreday-card dontPreview"} key={days + index}>
+                            <div className={"foreday-card"} key={days + index}>
                                 <img src={image} className="foreday-image"></img>
                                 <div className="foreday-date">{date ? date : "loading"}</div>
                                 <div className="foreday-temp">{celciusData ? minmax_temp_c : minmax_temp_f}</div>
@@ -98,7 +89,16 @@ function Forecast({ locationData, celciusData }) {
             </div>
             <div className="forecast-container">
                 <div className="forecast-slider">
-                    { dayData && dayData.map((hours, index) => {
+                    { foreCastLoading ? (
+                        <>
+                            <ForeCastTemplate />
+                            <ForeCastTemplate />
+                            <ForeCastTemplate />
+                            <ForeCastTemplate />
+                            <ForeCastTemplate />
+                        </>
+                    ) : (
+                        dayData && dayData.map((hours, index) => {
 
                         const temp_celcius = hours.temperature + "°C";
                         const temp_faren = Math.ceil((hours.temperature * 9 / 5) + 32) + "°F";
@@ -120,7 +120,7 @@ function Forecast({ locationData, celciusData }) {
                             </div>
                         )
                         })
-                    }
+                    )}
                     
                 </div>
             </div>
