@@ -4,7 +4,9 @@
 
 A sleek and minimalist weather application focused on frontend development. Built with modern technologies to deliver accurate, real-time weather data with a beautiful UI.
 
+## 🖌️ Design
 
+View the full Figma file 👉 [Here](https://www.figma.com/design/rgIdALutzQTdWGQoRvY6h9/WEATHER?m=auto&t=Vu77OT2X0eKkm6iR-6)
 
 ## 🧠 Overview
 
