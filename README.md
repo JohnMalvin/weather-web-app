@@ -1,6 +1,6 @@
 # 🌦️ Weather Web App
 
-<img src="preview.png" alt="Weather App Preview" style="width:100%; max-width:600px;" />
+<img src="./public/SCREENSHOOT.png" alt="Weather App Preview" style="width:100%; max-width:600px;" />
 
 A sleek and minimalist weather application focused on frontend development. Built with modern technologies to deliver accurate, real-time weather data with a beautiful UI.
 

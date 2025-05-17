@@ -36,8 +36,8 @@ export default function App() {
 
   useEffect(() => {
     setLoading(true);
-    console.log("Loading data for:", locationData);
-    console.log("Celcius Data:", celciusData);
+    // console.log("Loading data for:", locationData);
+    // console.log("Celcius Data:", celciusData);
   }, [locationData, celciusData]);
   return (
     <>

@@ -27,7 +27,7 @@ function Forecast({ locationData, celciusData, loading, setLoading }) {
         if (ignore) return;
             try {
                 const data = await getFullWeekWeatherData(locationData);
-                console.log("Full Week Weather Data:", data);
+                // console.log("Full Week Weather Data:", data);
                 setWeekData(data);
                 setForeDayLoading(false);
             } catch (error) {
@@ -44,7 +44,7 @@ function Forecast({ locationData, celciusData, loading, setLoading }) {
             if (ignore) return;
             try {
                 const data = await getFullDayWeatherData(locationData);
-                console.log("Full Day Weather Data:", data);
+                // console.log("Full Day Weather Data:", data);
                 setDayData(data);
                 setForeCastLoading(false);
                 setLoading(false);

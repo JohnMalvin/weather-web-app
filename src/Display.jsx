@@ -69,7 +69,7 @@ function Display({ locationData , celciusData, loading}) {
             try {
                 if (ignore) return;
                 const weather = await getWeatherData(location, 0, 0, false);
-                console.log(weather);
+                // console.log(weather);
                 setC_degree(Math.ceil(weather.temperature) + "°C");
                 setF_degree(String(Math.ceil(weather.temperature * 9 / 5 + 32)) + "°F");
                 setDescription(weather.description);

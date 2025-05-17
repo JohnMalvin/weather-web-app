@@ -22,7 +22,7 @@ function Others({ cities, celcius , locationData, setLocationData, setCities, lo
             try {
                 if (ignore) return;
                 const weather = await getOthersWeatherData(cities);
-                console.log(weather);
+                // console.log(weather);
                 setData(weather);
                 setOthersLoading(false);
             } catch (error) {
@@ -51,7 +51,7 @@ function Others({ cities, celcius , locationData, setLocationData, setCities, lo
                         <OthersTemplate />
                     </>
                 ) : (
-                    data.map((city, index) => {
+                    data.map((city) => {
                     const degree_c = Math.round(city.temperature) + "°C";
                     const degree_f = Math.round((city.temperature * 9) / 5 + 32) + "°F";
                     const uv_index = city.uvIndex + " UV";
@@ -60,7 +60,6 @@ function Others({ cities, celcius , locationData, setLocationData, setCities, lo
                     const city_name = city.city;
                     const target_location = `${city.city}, ${city.country}`;
                     const image = city.image;
-                    index === 0 ? console.log(data.map(city => city.city)) : null;
                     return (
                     <div className="others-card" key={target_location} onClick={() => {
                         setLocationData(city_name);
