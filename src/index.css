@@ -186,6 +186,11 @@ body::-webkit-scrollbar {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+}
+.search_circle img {
+    width: 50%;
+    height: 50%;
 }
 .icon_search{
     width: 15px;

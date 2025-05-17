@@ -3,7 +3,7 @@ import SPINNER from './../assets/SPINNER.svg';
 function OthersTemplate() {
   return (
     <div className="others-card" >
-      <div className="others-degree">{"loading..."}</div>
+      <div className="others-degree"></div>
       <div className="others-data">
           <div className="others-location hide-on-desktop">{"loading..."}</div>
           <div className="others-detail-container">

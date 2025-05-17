@@ -2,9 +2,10 @@ import './index.css'
 import PropTypes from 'prop-types';
 
 import ICON_CLOSE from './assets/ICONS/ICON-CLOSE.svg'
-import ICON_INFO from './assets/ICONS/ICON-INFO.svg'
-import REACT_ICON from './assets/react.svg'
 import GITHUB from './assets/GITHUB.png'
+import SETTING from './assets/SETTING.png'
+import SEARCH from './assets/SEARCH.png'
+import LOCATION from './assets/LOCATION.png'
 import { updateCities } from './CLIENT_HELPER.JS';
 import { verifyCityName } from './CLIENT_HELPER.JS';
 
@@ -64,20 +65,31 @@ function Header({ locationData, setLocationData, setCelciusData, celciusData, se
             <div className="tint"></div>
             <div className="header">
                 <div className="location">
-                    <img src={REACT_ICON} className='icon icon_location'></img>
+                    <img src={LOCATION} className='icon icon_location'></img>
                     <p id="current_location" className='current'>Sydney</p>
                 </div>
                 
                 <div className="search">
-                    <input id="search_input"  className={"with-border"} autoComplete='off'></input>
+                    <input
+                        id="search_input"
+                        className={"with-border"}
+                        autoComplete='off'
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                getNewSearch();
+                            }
+                        }}
+                        placeholder="Search for a city"
+                        type="text"
+                    ></input>
                     <div className="search_circle" >
-                        <img src={REACT_ICON} className='icon icon_search'onClick={getNewSearch}></img>
+                        <img src={SEARCH} className='icon icon_search'onClick={getNewSearch}></img>
                     </div>
                     <div className="result_box">
                     </div>
                 </div>
                 <div className="setting">
-                    <img src={ICON_INFO} className='icon icon_info' onClick={previewInfo}></img>
+                    <img src={SETTING} className='icon icon_info' onClick={previewInfo}></img>
                 </div>
 
             </div>
