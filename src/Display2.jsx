@@ -41,7 +41,6 @@ function Display({ locationData , celciusData, loading}) {
         setTimeout(() => setInfo(false), 1000);
     }
 
-    const celcius = celciusData;
     const [location, setLocation] = useState(locationData);
     const [formattedLocation, setFormattedLocation] = useState("Sydney, Australia");
     const [c_degree, setC_degree] = useState("0°C");
@@ -69,7 +68,7 @@ function Display({ locationData , celciusData, loading}) {
         const fetchWeather = async () => {
             try {
                 if (ignore) return;
-                const weather = await getWeatherData(location, 0, 0, celcius);
+                const weather = await getWeatherData(location, 0, 0, false);
                 console.log(weather);
                 setC_degree(Math.ceil(weather.temperature) + "°C");
                 setF_degree(String(Math.ceil(weather.temperature * 9 / 5 + 32)) + "°F");
@@ -89,7 +88,7 @@ function Display({ locationData , celciusData, loading}) {
     
         if (location) fetchWeather();
         return () => { ignore = true; };
-    }, [celcius, location]);
+    }, [celciusData, location]);
 
     return(
         <div className='comp-display'>
@@ -98,7 +97,7 @@ function Display({ locationData , celciusData, loading}) {
                     <img className='display-image' src={displayLoading ? SPINNER: image}></img>
                     <img className='display-info icon' src={ICON_INFO} onClick={displayInfo}></img>
                     <div className="display-time">{time}</div>
-                    <div className="display-degree">{celcius? c_degree: f_degree}</div>
+                    <div className="display-degree">{celciusData? c_degree: f_degree}</div>
                     <div className="display-content">
                         <div className="display-city">{formattedLocation}</div>
                         <div className="display-condition">{condition}</div>
@@ -110,7 +109,7 @@ function Display({ locationData , celciusData, loading}) {
                                 <div className="icon-container">
                                     <img className='icon' onClick={displayInfo} src={ICON_TEMP}></img>
                                 </div>
-                                <p onClick={displayInfo}>{!info ? celcius? f_degree: c_degree :"Temperature"}</p>
+                                <p onClick={displayInfo}>{!info ? celciusData? f_degree: c_degree :"Temperature"}</p>
                             </div>
                             <div className="details">
                                 <div className="icon-container">

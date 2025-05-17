@@ -31,12 +31,14 @@ function Others({ cities, celcius , locationData, setLocationData, setCities, lo
         };
         fetchWeather();
         return () => { ignore = true; };
-    }, [locationData, cities]);
+    }, [locationData, cities, loading]);
 
     useEffect(() => {
-        if (loading) {
+        if (loading === true) {
             setOthersLoading(true);
-        };
+        } else {
+            setOthersLoading(false);
+        }
     }, [loading]);
     
     return(

@@ -7,18 +7,38 @@ import './component.css'
 import Header from "./Header2";
 
 export default function WeatherDisplay() {
-  const [locationData, setLocationData] = useState("Sydney");
-  const [cities, setCities] = useState(["Melbourne", "Brisbane", "Canberra"]);
   const [loading, setLoading] = useState(false);
+  const [locationData, setLocationData] = useState(() => {
+    return localStorage.getItem("locationData") || "Sydney";
+  });
+  
+  const [cities, setCities] = useState(() => {
+    const stored = localStorage.getItem("cities");
+    return stored ? JSON.parse(stored) : ["Melbourne", "Brisbane", "Canberra"];
+  });
+  
+  const [celciusData, setCelciusData] = useState(() => {
+    const stored = localStorage.getItem("celciusData");
+    return stored !== null ? JSON.parse(stored) : true;
+  });
 
-  useEffect(() => { 
-    console.log("Location Data:", locationData);
-    console.log("Cities:", cities);
-  }, [locationData, cities]);
+  useEffect(() => {
+    localStorage.setItem("locationData", locationData);
+  }, [locationData]);
+  
+  useEffect(() => {
+    localStorage.setItem("cities", JSON.stringify(cities));
+  }, [cities]);
+  
+  useEffect(() => {
+    localStorage.setItem("celciusData", JSON.stringify(celciusData));
+  }, [celciusData]);
 
   useEffect(() => {
     setLoading(true);
-  }, [locationData]);
+    console.log("Loading data for:", locationData);
+    console.log("Celcius Data:", celciusData);
+  }, [locationData, celciusData]);
   return (
     <>
       <Header
@@ -26,7 +46,8 @@ export default function WeatherDisplay() {
         setLocationData={setLocationData}
         setCities={setCities}
         cities={cities}
-        celcius={false}
+        setCelciusData={setCelciusData}
+        celciusData={celciusData}
       />
       
       <div className="main-main-container">
@@ -34,13 +55,13 @@ export default function WeatherDisplay() {
 
           <Display
             locationData={locationData}
-            celciusData={false}
+            celciusData={celciusData}
             loading={loading}
             />
           
           <Forecast
             locationData={locationData}
-            celciusData={false}
+            celciusData={celciusData}
             loading={loading}
             setLoading={setLoading}
             />
@@ -50,7 +71,7 @@ export default function WeatherDisplay() {
             setLocationData={setLocationData}
             setCities={setCities}
             cities={cities}
-            celcius={false}
+            celcius={celciusData}
             loading={loading}
             />
         </div>

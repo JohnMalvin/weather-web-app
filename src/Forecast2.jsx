@@ -74,10 +74,10 @@ function Forecast({ locationData, celciusData, loading, setLoading }) {
                         const date = days.date;
                         const image = days.image;
 
-                        const max_temp_f = String(Math.ceil(days.temperatureMax));
-                        const max_temp_c = String(Math.ceil((days.temperatureMax - 32) * (5 / 9)));
-                        const min_temp_f = String(Math.floor(days.temperatureMin));
-                        const min_temp_c = String(Math.floor((days.temperatureMin - 32) * (5 / 9)));
+                        const max_temp_c = String(Math.ceil(days.temperatureMax));
+                        const max_temp_f = String(Math.ceil(days.temperatureMax * 9 / 5 + 32));
+                        const min_temp_c = String(Math.floor(days.temperatureMin));
+                        const min_temp_f = String(Math.floor(days.temperatureMin * 9 / 5 + 32));
 
                         const minmax_temp_c = min_temp_c + "°/" + max_temp_c + "°C";
                         const minmax_temp_f = min_temp_f + "°/" + max_temp_f + "°F";
@@ -108,7 +108,7 @@ function Forecast({ locationData, celciusData, loading, setLoading }) {
                     ) : (
                         dayData && dayData.map((hours, index) => {
 
-                        const temp_celcius = hours.temperature + "°C";
+                        const temp_celcius = Math.ceil(hours.temperature) + "°C";
                         const temp_faren = Math.ceil((hours.temperature * 9 / 5) + 32) + "°F";
 
                         const time = hours.time;
