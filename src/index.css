@@ -373,7 +373,7 @@ p a{
 .display-info{
     position: absolute;
     right: 0%;
-    top: 0%;
+    top: 5px;
     cursor: pointer;
 }
 /* .display-time, .display-content, .display-degree, .display-para, .display-city{

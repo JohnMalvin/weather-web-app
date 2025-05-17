@@ -4,6 +4,7 @@ import Others from "./Others2";
 import Forecast from "./Forecast2";
 import './index.css'
 import './component.css'
+import Header from "./Header2";
 
 export default function WeatherDisplay() {
   const [locationData, setLocationData] = useState("Sydney");
@@ -15,6 +16,13 @@ export default function WeatherDisplay() {
   }, [locationData, cities]);
   return (
     <>
+      <Header
+        locationData={locationData}
+        setLocationData={setLocationData}
+        setCities={setCities}
+        cities={cities}
+        celcius={false}
+      />
       
       <div className="main-main-container">
         <div className="main-container">

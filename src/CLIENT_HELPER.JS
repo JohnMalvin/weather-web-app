@@ -104,7 +104,28 @@ function getDateLabel(targetDate) {
   
     // Otherwise, return weekday name
     return targetDate.toLocaleDateString('en-US', { weekday: 'long' }); // e.g. "Monday"
+}
+  
+export const verifyCityName = async (cityName) => {
+  try {
+      const geoRes = await fetch(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1`
+      );
+
+      if (!geoRes.ok) throw new Error("Failed to fetch city data");
+
+      const geoData = await geoRes.json();
+
+      if (!geoData.results || geoData.results.length === 0) {
+          throw new Error("City not found");
+      }
+
+    return { city: geoData.results[0].name };
+  } catch (err) {
+      console.error("City verification failed:", err);
+      throw new Error("City verification failed");
   }
+};
   
 export const getWeatherData = async (cityName, dayOffset, hourOffset, isFahrenheit = false) => {
     try {
@@ -245,7 +266,7 @@ export const updateCities = (current, cities, selected) => {
     const filteredArray = cities.filter((element) => element !== selected);
     newArray = [...newArray, ...filteredArray];
     if (filteredArray.length === cities.length) {
-        newArray.pop();
+      newArray.pop();
     }
     return newArray;
 }
