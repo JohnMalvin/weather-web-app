@@ -1,73 +1,19 @@
 import './index.css'
 import {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 
-import REACT_ICON from './assets/react.svg'
+// import REACT_ICON from './assets/react.svg'
 import ICON_INFO from './assets/ICONS/ICON-INFO.svg'
 import ICON_HUMID from './assets/ICONS/ICON-HUMID.svg'
 import ICON_WIND from './assets/ICONS/ICON-WIND.svg'
 import ICON_TEMP from './assets/ICONS/ICON-TEMP.svg'
 import ICON_UV from './assets/ICONS/ICON-UV.svg'
+import SPINNER from "./assets/SPINNER.svg";
+import { getWeatherData } from './CLIENT_HELPER.JS';
+import PropTypes from 'prop-types';
 
-function Display({ location , celcius}) {
-    const toCelcius = celcius;
 
-    const [URL, setURL] = useState(`https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=Sydney&aqi=yes`)
-    const [URL2, setURL2] = useState("")
-    useEffect(()=> {
-        // console.log(location);
-        let new_url = `https://api.weatherapi.com/v1/forecast.json?key=838b65caf46d4b918db31334242810&hours=2&q=${location}&aqi=yes`
-        setURL(new_url)
-        
-        let currentDate = new Date();
-        let date1 = currentDate.toISOString().split('T')[0];
-
-        let nextWeekDate = new Date();
-        nextWeekDate.setDate(currentDate.getDate() + 7);
-        let date2 = nextWeekDate.toISOString().split('T')[0];
-        let URL2 = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date1}/${date2}?key=D4HK23E92MQYVH3V9GAW5EAYE`
-        setURL2(URL2)
-    }, [location])
-
-    const [weatherData, setWeatherData] = useState(null);
-    const [weatherData2, setWeatherData2] = useState(null);
-    useEffect(() => {
-        const fetchData = async ()=>{
-            try{
-                const result = await fetch(URL);
-                const json = await result.json();
-                setWeatherData(json);
-                // console.log(json);
-                let currentDate = new Date();
-                let date1 = currentDate.toISOString().split('T')[0];
-        
-                let nextWeekDate = new Date();
-                nextWeekDate.setDate(currentDate.getDate() + 7);
-                let date2 = nextWeekDate.toISOString().split('T')[0];
-                let URL2 = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date1}/${date2}?key=D4HK23E92MQYVH3V9GAW5EAYE`
-                let result2 = await fetch(URL2);
-                let json2 = await result2.json();
-                // console.log("here it is")
-                // console.log(json2);
-                setWeatherData2(json2)
-            } catch (error) {
-                console.log(error);
-                // console.log("ehvjewhjk");
-            } 
-            
-        };
-        fetchData();
-    }, [URL, URL2]);``
-
-    // const degree = String(weatherData.current.temp_c)+"°C";
-    const degree_c = weatherData2 && weatherData && weatherData.current? String(Math.ceil((weatherData2.currentConditions.temp - 32) * (5/9)))+ "°C" : "";
-    const degree_f = weatherData2 && weatherData && weatherData.current? String(Math.ceil(weatherData2.currentConditions.temp))+ "°F" : "";
-    const uv_index = weatherData && weatherData.current ? String(weatherData.current.uv) + " UV" : "";
-    const wind = weatherData && weatherData.current ? String(weatherData.current.wind_kph) + " kph" : "";
-    const humidity = weatherData && weatherData.current ? String(weatherData.current.humidity) + "%" : "";
-
-    const locations = weatherData && weatherData.current? String(weatherData.location.name) + ", " + String(weatherData.location.country) : "";
-    const [time, setTime] = useState("");
+function Display({ locationData , celciusData, loading}) {
+    const [time, setTime] = useState("00:00");
     
     function updateTime(){
         var clock = new Date();
@@ -80,35 +26,82 @@ function Display({ location , celcius}) {
         if (hour.length == 1) {
             hour = "0" + hour;
         }
-
+    
         setTime(hour + ":" +minute);
     }
-    setInterval(updateTime, 1000);
     useEffect(() => {
         const intervalId = setInterval(updateTime, 1000);
         return () => clearInterval(intervalId);
     }, []);
     
     const[info, setInfo] = useState(false);
-
+    
     function displayInfo() {
         setInfo(true);
         setTimeout(() => setInfo(false), 1000);
     }
 
+    const [location, setLocation] = useState(locationData);
+    const [formattedLocation, setFormattedLocation] = useState("Sydney, Australia");
+    const [c_degree, setC_degree] = useState("0°C");
+    const [f_degree, setF_degree] = useState("0°F");
+    const [description, setDescription] = useState("");
+    const [condition, setCondition] = useState("");
+    const [humidity, setHumidity] = useState(0 + "%");
+    const [uv_index, setUv_index] = useState(0 + " UV");
+    const [wind, setWind] = useState(0  + " km/h");
+    const [image, setImage] = useState("https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg");
+    const [displayLoading, setDisplayLoading] = useState(true);
+    
+    useEffect(() => {
+        if (loading) {
+            setDisplayLoading(true);
+        }
+    }, [loading])
+
+    useEffect(() => {
+        setLocation(locationData);
+    }, [locationData]);
+    
+    useEffect(() => {
+        let ignore = false;
+        const fetchWeather = async () => {
+            try {
+                if (ignore) return;
+                const weather = await getWeatherData(location, 0, 0, false);
+                console.log(weather);
+                setC_degree(Math.ceil(weather.temperature) + "°C");
+                setF_degree(String(Math.ceil(weather.temperature * 9 / 5 + 32)) + "°F");
+                setDescription(weather.description);
+                setCondition(weather.condition);
+                setHumidity(weather.humidity + "%");
+                setUv_index(weather.uvIndex + " UV");
+                setWind(weather.windspeed + " km/h");
+                setFormattedLocation(`${weather.location.city}, ${weather.location.country}`);
+                setImage(weather.image);
+                setDisplayLoading(false);
+
+            } catch (err) {
+                console.error(err);
+            }
+        };
+    
+        if (location) fetchWeather();
+        return () => { ignore = true; };
+    }, [celciusData, location]);
+
     return(
         <div className='comp-display'>
             <div className="display">
                 <div className="display-wrapped">
-                    <img className='display-image' src={REACT_ICON}></img>
+                    <img className='display-image' src={displayLoading ? SPINNER: image}></img>
                     <img className='display-info icon' src={ICON_INFO} onClick={displayInfo}></img>
                     <div className="display-time">{time}</div>
-                    <div className="display-degree">{toCelcius? degree_c: degree_f}</div>
+                    <div className="display-degree">{celciusData? c_degree: f_degree}</div>
                     <div className="display-content">
-                        <div className="display-city">{locations}</div>
-                        <div className="display-para">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et finibus mauris.
-                        </div>
+                        <div className="display-city">{formattedLocation}</div>
+                        <div className="display-condition">{condition}</div>
+                        <div className="display-para">{description}</div>
                     </div>
                     <div className="display-detail">
                         <div className="details-divide">
@@ -116,7 +109,7 @@ function Display({ location , celcius}) {
                                 <div className="icon-container">
                                     <img className='icon' onClick={displayInfo} src={ICON_TEMP}></img>
                                 </div>
-                                <p onClick={displayInfo}>{!info ? celcius? degree_f: degree_c :"Temperature"}</p>
+                                <p onClick={displayInfo}>{!info ? celciusData? f_degree: c_degree :"Temperature"}</p>
                             </div>
                             <div className="details">
                                 <div className="icon-container">
@@ -148,8 +141,10 @@ function Display({ location , celcius}) {
 
     )
 }
+
 Display.propTypes = {
-    location: PropTypes.string.isRequired,
-    celcius: PropTypes.bool.isRequired,
+    locationData: PropTypes.string.isRequired,
+    celciusData: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
 export default Display;

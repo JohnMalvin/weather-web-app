@@ -1,67 +1,81 @@
-import Display from './Display'
-import Header from './Header'
-import Others from './Others'
-import Forecast from './Forecast'
-// import Test from './Test'
-
+import { useEffect, useState } from "react";
+import Display from "./Display";
+import Others from "./Others";
+import Forecast from "./Forecast";
 import './index.css'
 import './component.css'
-import { useEffect, useState } from 'react'
+import Header from "./Header";
 
-function App() {
-  // let storedCelcius = localStorage.getItem("celcius");
-  // storedCelcius = storedCelcius === "false";
-  // if (!storedCelcius) {
-  //   storedCelcius = true;
-  //   localStorage.setItem("celcius", storedCelcius);
-  // }
-  const [array, setArray] = useState(["Melbourne", "London", "Kaohsiung"]);
-  const [location, setLocation] = useState("Sydney");
-  const [celcius, setCelcius] = useState(() => {
-    const storedCelcius = localStorage.getItem("celcius");
-    return storedCelcius !== null ? storedCelcius === "true" : true;
+export default function App() {
+  const [loading, setLoading] = useState(false);
+  const [locationData, setLocationData] = useState(() => {
+    return localStorage.getItem("locationData") || "Sydney";
+  });
+  
+  const [cities, setCities] = useState(() => {
+    const stored = localStorage.getItem("cities");
+    return stored ? JSON.parse(stored) : ["Melbourne", "Brisbane", "Canberra"];
+  });
+  
+  const [celciusData, setCelciusData] = useState(() => {
+    const stored = localStorage.getItem("celciusData");
+    return stored !== null ? JSON.parse(stored) : true;
   });
 
   useEffect(() => {
-    localStorage.setItem("celcius", String(celcius));
-  }, [celcius])
+    localStorage.setItem("locationData", locationData);
+  }, [locationData]);
+  
+  useEffect(() => {
+    localStorage.setItem("cities", JSON.stringify(cities));
+  }, [cities]);
+  
+  useEffect(() => {
+    localStorage.setItem("celciusData", JSON.stringify(celciusData));
+  }, [celciusData]);
 
+  useEffect(() => {
+    setLoading(true);
+    console.log("Loading data for:", locationData);
+    console.log("Celcius Data:", celciusData);
+  }, [locationData, celciusData]);
   return (
     <>
-      <Header className='comp-header'
-        location={location} 
-        setLocation={setLocation} 
-        setCelcius={setCelcius}
-        array={array}
-        setArray={setArray}
+      <Header
+        locationData={locationData}
+        setLocationData={setLocationData}
+        setCities={setCities}
+        cities={cities}
+        setCelciusData={setCelciusData}
+        celciusData={celciusData}
       />
+      
       <div className="main-main-container">
-        <div className='main-container'>
+        <div className="main-container">
 
-            <Display
-              location={location} 
-              celcius={celcius}
+          <Display
+            locationData={locationData}
+            celciusData={celciusData}
+            loading={loading}
             />
-
-            <Forecast
-              celcius = {celcius}
-              location={location}
-
+          
+          <Forecast
+            locationData={locationData}
+            celciusData={celciusData}
+            loading={loading}
+            setLoading={setLoading}
             />
-            
-            <Others className='others'
-              celcius={celcius} 
-              location={location} 
-              setLocation={setLocation} 
-              array={array} 
-              setArray={setArray} 
+          
+          <Others
+            locationData={locationData}
+            setLocationData={setLocationData}
+            setCities={setCities}
+            cities={cities}
+            celcius={celciusData}
+            loading={loading}
             />
-
-            {/* <Test/> */}
         </div>
       </div>
     </>
-  )
+  );
 }
-
-export default App
